@@ -8,6 +8,7 @@ from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 from freelance_crawler.config import CrawlResult, CrawlerConfig
 from freelance_crawler.crawler import run_crawl
@@ -123,21 +124,36 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(data)
 
+    def _get_static_path(self, raw_path: str) -> Path | None:
+        asset = raw_path.removeprefix("/static/")
+        if not asset:
+            return None
+        static_root = STATIC_DIR.resolve()
+        candidate = (static_root / asset).resolve()
+        if static_root == candidate or static_root in candidate.parents:
+            return candidate
+        return None
+
     def do_GET(self) -> None:  # noqa: N802
-        if self.path == "/api/status":
+        request_path = urlparse(self.path).path
+        if request_path == "/api/status":
             self._send_json(STATUS_TRACKER.to_dict())
             return
-        if self.path == "/":
+        if request_path == "/":
             self._send_file(STATIC_DIR / "index.html")
             return
-        if self.path.startswith("/static/"):
-            asset = self.path.replace("/static/", "")
-            self._send_file(STATIC_DIR / asset)
+        if request_path.startswith("/static/"):
+            static_path = self._get_static_path(request_path)
+            if not static_path:
+                self.send_error(HTTPStatus.NOT_FOUND)
+                return
+            self._send_file(static_path)
             return
         self.send_error(HTTPStatus.NOT_FOUND)
 
     def do_POST(self) -> None:  # noqa: N802
-        if self.path != "/api/start":
+        request_path = urlparse(self.path).path
+        if request_path != "/api/start":
             self.send_error(HTTPStatus.NOT_FOUND)
             return
         length = int(self.headers.get("Content-Length", "0"))
