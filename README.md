@@ -1,5 +1,25 @@
 # freelanceCrawler
 A simple crawler of an web page of page links for getting contact info
+
+## Setup
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+## Run
+
+```bash
+python -m freelance_crawler.cli
+```
+
+### Options
+
+```bash
+python -m freelance_crawler.cli --delay 1.5 --timeout 20 --output contacts.csv
+```
 Yes — technically it’s doable, but there are a few practical + legal gotchas.
 
 On that page, “Våra medlemmar” is essentially a long directory of outbound links to member publications/sites. ([Sveriges Tidskrifter][1])
