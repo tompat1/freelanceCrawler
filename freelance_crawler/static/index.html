@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Freelance Crawler UI</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header>
+        <h1>Freelance Crawler Status</h1>
+        <p class="subtitle">Track crawl progress and the contact info collected.</p>
+      </header>
+
+      <section class="panel">
+        <div class="controls">
+          <button id="startButton" class="primary">Start crawl</button>
+          <div class="status" id="statusPill">Idle</div>
+        </div>
+        <div class="grid">
+          <div>
+            <h3>Progress</h3>
+            <div class="progress">
+              <div id="progressBar" class="progress-bar"></div>
+            </div>
+            <div class="progress-meta">
+              <span id="progressText">0 / 0 sites</span>
+              <span id="currentSite">&nbsp;</span>
+            </div>
+          </div>
+          <div>
+            <h3>Summary</h3>
+            <ul class="summary">
+              <li><span>Total sites</span><strong id="totalSites">0</strong></li>
+              <li><span>Completed</span><strong id="completedSites">0</strong></li>
+              <li><span>Emails found</span><strong id="emailsFound">0</strong></li>
+              <li><span>Phones found</span><strong id="phonesFound">0</strong></li>
+            </ul>
+          </div>
+        </div>
+        <p id="errorMessage" class="error"></p>
+      </section>
+
+      <section class="panel">
+        <h2>Latest results</h2>
+        <div class="table">
+          <div class="row header">
+            <div>Site</div>
+            <div>Emails</div>
+            <div>Phones</div>
+            <div>Status</div>
+          </div>
+          <div id="resultsBody"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

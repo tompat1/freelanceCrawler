@@ -4,7 +4,7 @@ import csv
 import re
 import time
 from dataclasses import asdict
-from typing import Iterable
+from typing import Callable, Iterable
 from urllib.parse import urljoin, urlparse
 
 import requests
@@ -110,7 +110,10 @@ def collect_sites(directory_url: str, config: CrawlerConfig) -> list[str]:
     return [site for site in sites if site is not None]
 
 
-def run_crawl(config: CrawlerConfig) -> list[CrawlResult]:
+def run_crawl(
+    config: CrawlerConfig,
+    progress_callback: Callable[[int, int, CrawlResult], None] | None = None,
+) -> list[CrawlResult]:
     sites = collect_sites(config.directory_url, config)
     results: list[CrawlResult] = []
     for index, site in enumerate(sites, start=1):
@@ -129,6 +132,8 @@ def run_crawl(config: CrawlerConfig) -> list[CrawlResult]:
                 ),
             )
             print(f"[{index}/{len(sites)}] {site} -> ERROR: {exc}")
+        if progress_callback:
+            progress_callback(index, len(sites), results[-1])
         time.sleep(config.delay_s)
     return results
 
