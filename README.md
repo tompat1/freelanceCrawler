@@ -15,6 +15,14 @@ pip install -r requirements.txt
 python -m freelance_crawler.cli
 ```
 
+## Run the UI
+
+```bash
+python -m freelance_crawler.ui_server
+```
+
+Then open `http://localhost:8000` to track crawl progress and review recent contact results.
+
 ### Options
 
 ```bash
